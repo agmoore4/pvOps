@@ -1,6 +1,7 @@
 # Classifiers
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
+from sklearn.preprocessing import LabelEncoder
 
 from scipy.sparse import issparse
 
@@ -118,12 +119,13 @@ def classification_deployer(
     DataFrame
         Summarization of results from all of the classifiers
     """
-
     rows = []
 
     if issparse(X):
         print("Converting passed data to dense array...")
         X = X.toarray()
+    encoder = LabelEncoder().fit(y)
+    y_enc = encoder.transform(y) # GridSearchCV doesn't work correctly unless labels are pre-encoded
 
     # get position of 'clf' in pipeline_steps
     idx_clf_pipeline = [i for i, it in enumerate(
@@ -151,7 +153,7 @@ def classification_deployer(
             return_train_score=True,
             verbose=verbose,
         )
-        gs_clf.fit(X, y)
+        gs_clf.fit(X, y_enc)
         params = gs_clf.cv_results_["params"]
         scores = []
         for i in range(n_splits):
@@ -187,7 +189,7 @@ def classification_deployer(
             best_model_score = gs_clf.best_score_
             best_gs_instance = gs_clf
 
-    return pd.concat(rows, axis=1).T, best_gs_instance.best_estimator_
+    return pd.concat(rows, axis=1).T, best_gs_instance.best_estimator_, encoder
 
 def get_attributes_from_keywords(om_df, col_dict, reference_df, reference_col_dict):
     """Find keywords of interest in specified column of dataframe, return as new column value.

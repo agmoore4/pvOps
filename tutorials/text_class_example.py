@@ -232,7 +232,7 @@ class Example:
                 print("Starting ML analysis with Doc2Vec embeddings")
                 search_space = self._doc2vec_classifier_defs(search_space)
 
-            results_df, best_model = classify.classification_deployer(
+            results_df, best_model, self.encoder = classify.classification_deployer(
                 X,
                 y,
                 n_cv_splits,
@@ -519,6 +519,7 @@ class Example:
 
         X = self.df[self.DATA_COLUMN].tolist()
         y = self.df[self.LABEL_COLUMN].tolist()
+        y_enc = self.encoder.transform(y)
 
         if ml_type == "supervised":
             print("Best algorithm found:\n", self.supervised_best_model)
@@ -529,12 +530,12 @@ class Example:
 
         if eval_func is None:
             if ml_type == "supervised":
-                score = f1_score(y, pred_y, average="weighted")
+                score = f1_score(y_enc, pred_y, average="weighted")
                 self.greater_is_better = True
                 if PREDICTION_OUTPUT_COL is None:
                     output_col = f"Supervised_Pred_{self.LABEL_COLUMN}"
             elif ml_type == "unsupervised":
-                score = homogeneity_score(y, pred_y, *eval_aargs)
+                score = homogeneity_score(y_enc, pred_y, *eval_aargs)
                 self.greater_is_better = True
                 if PREDICTION_OUTPUT_COL is None:
                     output_col = f"Unsupervised_Pred_{self.LABEL_COLUMN}"
