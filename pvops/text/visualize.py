@@ -27,6 +27,7 @@ def visualize_attribute_connectivity(
     attribute_colors=["lightgreen", "cornflowerblue"],
     edge_width_scalar=10,
     graph_aargs={},
+    ax=None
 ):
     """Visualize a knowledge graph which shows the frequency of combinations between attributes
     ``ATTRIBUTE1_COL`` and ``ATTRIBUTE2_COL``
@@ -62,6 +63,8 @@ def visualize_attribute_connectivity(
         - font_weight='bold'
         - node_size=19000
         - font_size=35
+    ax : matplotlib.pyplot.Axes
+        Optional, axis to plot on. If not provided, will create a new instance.
 
     Returns
     -------
@@ -69,8 +72,10 @@ def visualize_attribute_connectivity(
     networkx graph
     """
     # initialize figure
-    fig = plt.figure(figsize=figsize, facecolor='w', edgecolor='k')
-    ax = plt.gca()
+    if ax is None:
+        fig, ax = plt.subplots(figsize=figsize)
+    else:
+        fig = ax.get_figure()
 
     # attribute column names
     ATTRIBUTE1_COL = om_col_dict["attribute1_col"]
@@ -133,7 +138,7 @@ def visualize_attribute_connectivity(
 
 
 def visualize_attribute_timeseries(
-    om_df, om_col_dict, date_structure="%Y-%m", figsize=(12, 6), cmap_name="brg"
+    om_df, om_col_dict, date_structure="%Y-%m", figsize=(12, 6), cmap_name="brg", ax=None
 ):
     """Visualize stacked bar chart of attribute frequency over time, where x-axis is time and y-axis is count, displaying separate bars
     for each label within the label column
@@ -153,9 +158,11 @@ def visualize_attribute_timeseries(
         Default : "%Y-%m". Can change to include finer resolutions (e.g., by including day, "%Y-%m-%d")
         or coarser resolutions (e.g., by year, "%Y")
     figsize : tuple
-        Optional, figure size
+        Optional, figure size. Ignored if `ax` is provided.
     cmap_name : str
         Optional, color map name in matplotlib
+    ax : matplotlib.pyplot.Axes
+        Optional, axis to plot on. If not provided, creates a new instance.
 
     Returns
     -------
@@ -172,7 +179,10 @@ def visualize_attribute_timeseries(
             out[loc] = val
         return out
 
-    fig = plt.figure(figsize=figsize)
+    if ax is None:
+        fig, ax = plt.subplots(figsize=figsize)
+    else:
+        fig = ax.get_figure()
     asset_set = list(set(df[LABEL_COLUMN].tolist()))
 
     dates = df[DATE_COLUMN].tolist()
@@ -210,18 +220,19 @@ def visualize_attribute_timeseries(
         valcounts = iter_[DATE_COLUMN].value_counts()
         valcounts.sort_index(inplace=True)
         vals = restructure(valcounts.values, valcounts.index, date_set)
-        p = plt.bar(date_set, vals, color=cmap(i))
+        p = ax.bar(date_set, vals, color=cmap(i))
         graphs.append(p[0])
 
-    plt.legend(graphs, list(asset_set))
-    plt.xlabel("Month")
-    plt.ylabel(f"Affected {LABEL_COLUMN} counts")
-    plt.xticks(rotation=45)
+    ax.grid()
+    ax.legend(graphs, list(asset_set))
+    ax.set_xlabel("Month")
+    ax.set_ylabel(f"Affected {LABEL_COLUMN} counts")
+    ax.set_xticks(ax.get_xticks(), ax.get_xticklabels(), rotation=45)
     return fig
 
 
 def visualize_cluster_entropy(
-    doc2vec, eval_kmeans, om_df, data_cols, ks, cmap_name="brg"
+    doc2vec, eval_kmeans, om_df, data_cols, ks, cmap_name="brg", ax=None
 ):
     """Visualize entropy of embedding space parition. Currently only supports doc2vec embedding.
 
@@ -248,6 +259,8 @@ def visualize_cluster_entropy(
         List of k parameters required for the clustering mechanic `eval_kmeans`
     cmap_name :
         Optional, color map
+    ax : matplotlib.Axes
+        Optional, axis to plot on. If not provided, creates a new instance.
 
     Returns
     -------
@@ -256,7 +269,10 @@ def visualize_cluster_entropy(
     df = om_df.copy()
     cols = data_cols
 
-    fig = plt.figure(figsize=(6, 6))
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(6, 6))
+    else:
+        fig = ax.get_figure()
     cmap = plt.cm.get_cmap(cmap_name, len(cols) * 2)
 
     for i, col in enumerate(cols):
@@ -281,7 +297,7 @@ def visualize_cluster_entropy(
             km = eval_kmeans(X_doc2vec, true_k)
             sse.append(km.inertia_)
             clusters.append(km.labels_)
-        plt.plot(
+        ax.plot(
             ks, sse, color=cmap(2 * i), marker="o", label=f"Doc2Vec + {col} entropy"
         )
 
@@ -294,13 +310,15 @@ def visualize_cluster_entropy(
             km = eval_kmeans(X_tfidf, true_k)
             sse.append(km.inertia_)
             clusters.append(km.labels_)
-        plt.plot(
+        ax.plot(
             ks, sse, color=cmap(2 * i + 1), marker="o", label=f"TF-IDF + {col} entropy"
         )
 
-    plt.xlabel(r"Number of clusters *k*")
-    plt.ylabel("Sum of squared distance")
-    plt.legend()
+    ax.grid()
+    ax.set_ylim(0,None)
+    ax.set_xlabel(r"Number of clusters *k*")
+    ax.set_ylabel("Sum of squared distance")
+    ax.legend()
 
     return fig
 
@@ -385,7 +403,8 @@ def visualize_word_frequency_plot(tokenized_words,
                                   title="",
                                   font_size=16,
                                   num_tokens=30,
-                                  graph_aargs={}):
+                                  graph_aargs={},
+                                  ax=None):
     """
     Visualize the frequency distribution of words within a set of documents. This function
     identifies unique tokens and counts how many times each appears.
@@ -396,8 +415,6 @@ def visualize_word_frequency_plot(tokenized_words,
         List of tokenized words
     title : str
         Optional, title of plot
-    font_size : int
-        Optional, font size
     graph_aargs : dict
         Optional, other parameters passed to `plt.plot`.
 
@@ -407,6 +424,8 @@ def visualize_word_frequency_plot(tokenized_words,
             - `'cumulative'`: computes the count cumulatively (in order of descending count)
             - `'percents'`: shows the y-axis as a percent of all tokens instead of integer count
             - `'show'`: whether to call show() the matplotlib.pyplot.Figure instance
+    ax : matplotlib.Axes
+        Optional, axis to plot on. Otherwise creates a new instance.
 
     Returns
     -------
@@ -423,9 +442,6 @@ def visualize_word_frequency_plot(tokenized_words,
 
     https://www.nltk.org/
     """
-
-    matplotlib.rcParams.update({"font.size": font_size})
-
     unique_tokens = list(set(tokenized_words))
     unique_tokens.sort(key=(lambda token: tokenized_words.count(token)), reverse=True)
     unique_tokens = unique_tokens[:num_tokens]
@@ -434,7 +450,10 @@ def visualize_word_frequency_plot(tokenized_words,
     # trim number of tokens if number of unique ones is less than the requested number
     num_tokens = min(num_tokens, len(unique_tokens))
 
-    fig, ax = plt.subplots(figsize=(12, 6))
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(12, 6))
+    else:
+        fig = ax.get_figure()
 
     # treat the nltk-inspired keywords
     if 'cumulative' in graph_aargs:
@@ -458,10 +477,11 @@ def visualize_word_frequency_plot(tokenized_words,
         graph_aargs.pop(used_keyword, None)
 
     # plot
-    ax.grid(True, color="silver")
+    ax.grid()
     ax.plot(counts, **graph_aargs)
     ax.set_xticks(range(num_tokens))
     ax.set_xticklabels([token for token in unique_tokens], rotation=90)
+    ax.set_ylim(0, None)
     ax.set_xlabel("Samples")
     ax.set_ylabel(ylabel)
     ax.set_title(title)
