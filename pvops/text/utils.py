@@ -4,8 +4,9 @@ import numpy as np
 
 def remap_attributes(om_df, remapping_df, remapping_col_dict,
                      allow_missing_mappings=False, print_info=False):
-    """A utility function which remaps the attributes of om_df using columns
-       within remapping_df.
+    """
+    A utility function which remaps the attributes of om_df using columns
+    within remapping_df.
 
     Parameters
     ----------
@@ -16,7 +17,6 @@ def remap_attributes(om_df, remapping_df, remapping_col_dict,
     remapping_col_dict : dict of {str : str}
         A dictionary that contains the column names that describes how
         remapping is going to be done
-
         - attribute_col : string, should be assigned to associated
           column name in om_df which will be remapped
         - remapping_col_from : string, should be assigned
@@ -82,8 +82,9 @@ def remap_attributes(om_df, remapping_df, remapping_col_dict,
     return df
 
 def remap_words_in_text(om_df, remapping_df, remapping_col_dict):
-    """A utility function which remaps a text column of om_df using columns
-       within remapping_df.
+    """
+    A utility function which remaps a text column of om_df using columns
+    within remapping_df.
 
     Parameters
     ----------
@@ -94,7 +95,6 @@ def remap_words_in_text(om_df, remapping_df, remapping_col_dict):
     remapping_col_dict : dict of {str : str}
         A dictionary that contains the column names that describes how
         remapping is going to be done
-
         - data : string, should be assigned to associated
           column name in om_df which will have its text tokenized and remapped
         - remapping_col_from : string, should be assigned

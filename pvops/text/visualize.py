@@ -29,19 +29,16 @@ def visualize_attribute_connectivity(
     graph_aargs={},
     ax=None
 ):
-    """Visualize a knowledge graph which shows the frequency of combinations between attributes
-    ``ATTRIBUTE1_COL`` and ``ATTRIBUTE2_COL``
-
-    NOW USES BIPARTITE LAYOUT
-    ATTRIBUTE2_COL is colored using a colormap.
+    """Visualize a bipartite graph which shows the frequency of combinations between attributes
+    ``ATTRIBUTE1_COL`` and ``ATTRIBUTE2_COL``.
 
     Parameters
     ----------
     om_df : DataFrame
-        A pandas dataframe containing O&M data, which contains columns specified in om_col_dict
+        A pandas dataframe containing O&M data, which contains columns specified in `om_col_dict`
     om_col_dict : dict of {str : str}
         A dictionary that contains the column names to be used in
-        visualization::
+        visualization. Must have the following structure (with keys matching exactly)::
 
             {
                 'attribute1_col' : string,
@@ -49,16 +46,15 @@ def visualize_attribute_connectivity(
             }
 
     figsize : tuple
-        Figure size, defaults to (20,10)
+        Optional. Figure size, defaults to `(20,10)`. Ignored if `ax` is provided.
     attribute_colors : list[str]
-        List of two strings which designate the colors for Attribute1 and Attribute 2, respectively.
+        List of two strings which designate the colors for `attribute1_col` and `attribute2_col`, respectively.
     edge_width_scalar : numeric
-        Weight utilized to scale widths based on number of connections between Attribute 1
-        and Attribute 2. Larger values will produce larger widths, and smaller values will produce smaller widths.
+        Weight utilized to scale widths based on number of connections between `attribute1_col` and `attribute2_col`.
+        Larger values will produce larger widths, and smaller values will produce smaller widths.
     graph_aargs : dict
         Optional, arguments passed to networkx graph drawer.
         Suggested attributes to pass:
-
         - with_labels=True
         - font_weight='bold'
         - node_size=19000
@@ -68,8 +64,7 @@ def visualize_attribute_connectivity(
 
     Returns
     -------
-    Matplotlib axis,
-    networkx graph
+    matplotlib figure instance, networkx graph
     """
     # initialize figure
     if ax is None:
