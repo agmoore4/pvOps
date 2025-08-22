@@ -202,14 +202,14 @@ def get_attributes_from_keywords(om_df, col_dict, reference_df, reference_col_di
     ----------
     om_df : pd.DataFrame
         Dataframe to search for keywords of interest, must include text_col.
-    col_dict : dict of {str : str}
+    col_dict : dict of {str: str}
         A dictionary that contains the column names needed:
         - data : string, should be assigned to associated column which stores the tokenized text logs
         - predicted_col : string, will be used to create keyword search label column
     reference_df : DataFrame
         Holds columns that define the reference dictionary to search for keywords of interest,
         Note: This function can currently only handle single words, no n-gram functionality.
-    reference_col_dict : dict of {str : str}
+    reference_col_dict : dict of {str: str}
         A dictionary that contains the column names that describes how
         referencing is going to be done
         - reference_col_from : string, should be assigned to

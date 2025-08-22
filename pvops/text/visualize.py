@@ -36,14 +36,11 @@ def visualize_attribute_connectivity(
     ----------
     om_df : DataFrame
         A pandas dataframe containing O&M data, which contains columns specified in `om_col_dict`
-    om_col_dict : dict of {str : str}
+    om_col_dict : dict of {str: str}
         A dictionary that contains the column names to be used in
         visualization. Must have the following structure (with keys matching exactly)::
 
-            {
-                'attribute1_col' : string,
-                'attribute2_col' : string
-            }
+            {'attribute1_col': string, 'attribute2_col': string}
 
     figsize : tuple
         Optional. Figure size, defaults to `(20,10)`. Ignored if `ax` is provided.
@@ -133,7 +130,7 @@ def visualize_attribute_connectivity(
 
 
 def visualize_attribute_timeseries(
-    om_df, om_col_dict, date_structure="%Y-%m", figsize=(12, 6), cmap_name="brg", ax=None
+    om_df, om_col_dict=None, date_structure="%Y-%m", figsize=(12, 6), cmap_name="brg", ax=None
 ):
     """Visualize stacked bar chart of attribute frequency over time, where x-axis is time and y-axis is count, displaying separate bars
     for each label within the label column
@@ -141,13 +138,9 @@ def visualize_attribute_timeseries(
     Parameters
     ----------
     om_df : DataFrame
-        A pandas dataframe of O&M data, which contains columns in om_col_dict
-    om_col_dict : dict of {str : str}
-        A dictionary that contains the column names relevant for the get_dates fn
-
-        - **label** (*string*), should be assigned to associated column name for the label/attribute of interest in om_df
-        - **date** (*string*), should be assigned to associated column name for the dates relating to the documents in om_df
-
+        A pandas dataframe of O&M data, which contains columns in `om_col_dict`
+    om_col_dict : None
+        Placeholder; argument is no longer used.
     date_structure : str
         Controls the resolution of the bar chart's timeseries
         Default : "%Y-%m". Can change to include finer resolutions (e.g., by including day, "%Y-%m-%d")
@@ -164,8 +157,8 @@ def visualize_attribute_timeseries(
     Matplotlib figure instance
     """
     df = om_df.copy()
-    LABEL_COLUMN = om_col_dict["label"]
-    DATE_COLUMN = om_col_dict["date"]
+    LABEL_COLUMN = 'label_column'
+    DATE_COLUMN = 'date_column'
 
     def restructure(vals, inds, ind_set):
         out = np.zeros(len(ind_set))
@@ -494,7 +487,7 @@ def visualize_classification_confusion_matrix(om_df, col_dict, title=''):
     ----------
     om_df : DataFrame
         A pandas dataframe containing O&M data, which contains columns specified in om_col_dict
-    col_dict : dict of {str : str}
+    col_dict : dict of {str: str}
         A dictionary that contains the column names needed:
 
         - data : string, should be assigned to associated column which stores the tokenized text logs

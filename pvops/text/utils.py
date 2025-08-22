@@ -14,7 +14,7 @@ def remap_attributes(om_df, remapping_df, remapping_col_dict,
         A pandas dataframe containing O&M data, which needs to be remapped.
     remapping_df : DataFrame
         Holds columns that define the remappings
-    remapping_col_dict : dict of {str : str}
+    remapping_col_dict : dict of {str: str}
         A dictionary that contains the column names that describes how
         remapping is going to be done
         - attribute_col : string, should be assigned to associated
@@ -92,7 +92,7 @@ def remap_words_in_text(om_df, remapping_df, remapping_col_dict):
         A pandas dataframe containing O&M note data
     remapping_df : DataFrame
         Holds columns that define the remappings
-    remapping_col_dict : dict of {str : str}
+    remapping_col_dict : dict of {str: str}
         A dictionary that contains the column names that describes how
         remapping is going to be done
         - data : string, should be assigned to associated
