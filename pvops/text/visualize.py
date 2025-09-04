@@ -139,8 +139,11 @@ def visualize_attribute_timeseries(
     ----------
     om_df : DataFrame
         A pandas dataframe of O&M data, which contains columns in `om_col_dict`
-    om_col_dict : None
-        Placeholder; argument is no longer used.
+    om_col_dict : dict of {str : str}
+        A dictionary that contains the column names relevant for the get_dates fn
+
+        - **label** (*string*), should be assigned to associated column name for the label/attribute of interest in om_df
+        - **date** (*string*), should be assigned to associated column name for the dates relating to the documents in om_df
     date_structure : str
         Controls the resolution of the bar chart's timeseries
         Default : "%Y-%m". Can change to include finer resolutions (e.g., by including day, "%Y-%m-%d")
@@ -157,8 +160,8 @@ def visualize_attribute_timeseries(
     Matplotlib figure instance
     """
     df = om_df.copy()
-    LABEL_COLUMN = 'label_column'
-    DATE_COLUMN = 'date_column'
+    LABEL_COLUMN = om_col_dict["label"]
+    DATE_COLUMN = om_col_dict["date"]
 
     def restructure(vals, inds, ind_set):
         out = np.zeros(len(ind_set))
