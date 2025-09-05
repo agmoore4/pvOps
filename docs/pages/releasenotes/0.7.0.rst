@@ -34,4 +34,6 @@ Other
 
 * Minor changes to plotting functions in the submodule `pvops.text.visualize` related to text size and other miscellaneous aspects of figures.
 
-* Python versions for testing changed from 3.8-3.11 to 3.9-3.13. 3.8 has reached end-of-life, and 3.13 is current (see: https://devguide.python.org/versions/).
+* Python versions for testing/linting changed from 3.8-3.11 to 3.9-3.13. 3.8 has reached end-of-life, and 3.13 is current (see: https://devguide.python.org/versions/).
+
+* Building docs changed to use Python 3.13 (previously 3.11).
