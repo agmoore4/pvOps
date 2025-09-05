@@ -115,7 +115,7 @@ def remap_words_in_text(om_df, remapping_df, remapping_col_dict):
     REMAPPING_COL_TO = remapping_col_dict["remapping_col_to"]
 
     # drop any values where input value is equal to output value
-    remapping_df = remapping_df[remapping_df[REMAPPING_COL_FROM] != remapping_df[REMAPPING_COL_TO]]
+    remapping_df = remapping_df[remapping_df[REMAPPING_COL_FROM] != remapping_df[REMAPPING_COL_TO]].copy()
 
     # case-sensitive
     remapping_df[REMAPPING_COL_FROM] = remapping_df[REMAPPING_COL_FROM].str.lower()

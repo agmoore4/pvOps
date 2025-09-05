@@ -314,7 +314,7 @@ def visualize_cluster_entropy(
     return fig
 
 
-def visualize_document_clusters(cluster_tokens, min_frequency=20):
+def visualize_document_clusters(cluster_tokens, min_frequency=20, ax=None):
     """Visualize words most frequently occurring in a cluster. Especially useful when visualizing
     the results of an unsupervised partitioning of documents.
 
@@ -324,6 +324,8 @@ def visualize_document_clusters(cluster_tokens, min_frequency=20):
         List of tokenized documents
     min_frequency : int
         Minimum number of occurrences that a word must have in a cluster for it to be visualized
+    ax : matplotlib.Axes
+        Optional, axis to plot on. If not provided, creates a new instance.
 
     Returns
     -------
@@ -361,7 +363,8 @@ def visualize_document_clusters(cluster_tokens, min_frequency=20):
         freq_list.append(freq)
         word_list.append(wd)
 
-    # fig = plt.figure(figsize=(10,20))
+    if ax is None:
+        _, ax = plt.subplots(figsize=(12,6))
 
     filter_cluster_list = []
     filter_freq_list = []
@@ -373,8 +376,7 @@ def visualize_document_clusters(cluster_tokens, min_frequency=20):
 
     df = pd.DataFrame(index=filter_cluster_list)
     df["freq"] = filter_freq_list
-    ax = df["freq"].plot(kind="barh", figsize=(
-        20, 14), color="coral", fontsize=13)
+    df["freq"].plot(kind="barh", color="coral", ax=ax)
 
     xbias = 0.3
     ybias = 0.0
@@ -383,11 +385,10 @@ def visualize_document_clusters(cluster_tokens, min_frequency=20):
             i.get_width() + xbias,
             i.get_y() + ybias,
             filter_word_list[idx],
-            fontsize=15,
             color="dimgrey",
         )
 
-    return ax
+    return ax.get_figure()
 
 
 def visualize_word_frequency_plot(tokenized_words,
@@ -406,6 +407,8 @@ def visualize_word_frequency_plot(tokenized_words,
         List of tokenized words
     title : str
         Optional, title of plot
+    font_size : int
+        Optional, unused. Left for compatibility.
     graph_aargs : dict
         Optional, other parameters passed to `plt.plot`.
 
@@ -483,7 +486,7 @@ def visualize_word_frequency_plot(tokenized_words,
     return fig, {token: count for token, count in zip(unique_tokens, counts)}
 
 
-def visualize_classification_confusion_matrix(om_df, col_dict, title=''):
+def visualize_classification_confusion_matrix(om_df, col_dict, title='', ax=None):
     """Visualize confusion matrix comparing known categorical values, and predicted categorical values.
 
     Parameters
@@ -492,13 +495,12 @@ def visualize_classification_confusion_matrix(om_df, col_dict, title=''):
         A pandas dataframe containing O&M data, which contains columns specified in om_col_dict
     col_dict : dict of {str: str}
         A dictionary that contains the column names needed:
-
-        - data : string, should be assigned to associated column which stores the tokenized text logs
-        - attribute_col : string, will be assigned to attribute column and used to create new attribute_col
-        - predicted_col : string, will be used to create keyword search label column
-
+        - attribute_col : string, assigned to the true labels
+        - predicted_col : string, assigned to the predicted labels
     title : str
         Optional, title of plot
+    ax : matplotlib.Axes
+        Optional, axis to plot on. Otherwise creates a new instance.
 
     Returns
     -------
@@ -511,16 +513,20 @@ def visualize_classification_confusion_matrix(om_df, col_dict, title=''):
     no_real_values = [cat for cat in om_df[pred_col].unique() if cat not in om_df[act_col].unique()]
     no_real_values_mask = om_df[pred_col].isin(no_real_values)
     om_df = om_df[~no_real_values_mask]
-    caption_txt = f'NOTE: Predicted values{no_real_values} had no actual values in the dataset.'
+    caption_txt = f'NOTE: Predicted values\n{no_real_values}\nhad no actual values in the dataset.'
 
-    plt.rcParams.update({'font.size': 8})
-    cm_display = ConfusionMatrixDisplay.from_predictions(y_true=om_df[act_col],
-                                                         y_pred=om_df[pred_col],
-                                                         normalize='true',
-                                                         )
-    fig = cm_display.plot()
-    plt.xticks(rotation=90)
-    plt.tight_layout()
-    plt.figtext(0.00, 0.01, caption_txt, wrap=True, fontsize=7)
-    plt.title(title)
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(12,6))
+    else:
+        fig = ax.get_figure()
+
+    ConfusionMatrixDisplay.from_predictions(y_true=om_df[act_col],
+                                            y_pred=om_df[pred_col],
+                                            normalize='true',
+                                            ax=ax)
+
+    ax.set_xticks(ax.get_xticks(), ax.get_xticklabels(), rotation=90)
+    print(caption_txt)
+    ax.set_title(title)
+    fig.tight_layout()
     return fig
