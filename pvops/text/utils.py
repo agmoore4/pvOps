@@ -18,13 +18,13 @@ def remap_attributes(om_df, remapping_df, remapping_col_dict,
         A dictionary that contains the column names that describes how
         remapping is going to be done
         - attribute_col : string, should be assigned to associated
-          column name in om_df which will be remapped
+        column name in om_df which will be remapped
         - remapping_col_from : string, should be assigned
-          to associated column name in remapping_df that matches
-          original attribute of interest in om_df
+        to associated column name in remapping_df that matches
+        original attribute of interest in om_df
         - remapping_col_to : string, should be assigned to
-          associated column name in remapping_df that contains the
-          final mapped entries
+        associated column name in remapping_df that contains the
+        final mapped entries
     allow_missing_mappings : bool
         If True, allow attributes without specified mappings to exist in
         the final dataframe.
@@ -96,13 +96,13 @@ def remap_words_in_text(om_df, remapping_df, remapping_col_dict):
         A dictionary that contains the column names that describes how
         remapping is going to be done
         - data : string, should be assigned to associated
-          column name in om_df which will have its text tokenized and remapped
+        column name in om_df which will have its text tokenized and remapped
         - remapping_col_from : string, should be assigned
-          to associated column name in remapping_df that matches
-          original attribute of interest in om_df
+        to associated column name in remapping_df that matches
+        original attribute of interest in om_df
         - remapping_col_to : string, should be assigned to
-          associated column name in remapping_df that contains the
-          final mapped entries
+        associated column name in remapping_df that contains the
+        final mapped entries
 
     Returns
     -------

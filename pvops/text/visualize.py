@@ -306,7 +306,7 @@ def visualize_cluster_entropy(
         )
 
     ax.grid()
-    ax.set_ylim(0,None)
+    ax.set_ylim(0, None)
     ax.set_xlabel(r"Number of clusters *k*")
     ax.set_ylabel("Sum of squared distance")
     ax.legend()
@@ -364,7 +364,7 @@ def visualize_document_clusters(cluster_tokens, min_frequency=20, ax=None):
         word_list.append(wd)
 
     if ax is None:
-        _, ax = plt.subplots(figsize=(12,6))
+        _, ax = plt.subplots(figsize=(12, 6))
 
     filter_cluster_list = []
     filter_freq_list = []
@@ -415,9 +415,9 @@ def visualize_word_frequency_plot(tokenized_words,
         Note certain specific keys are handled by the function directly rather than `plt.plot`,
         analogously to the keyword arguments in nltk's `nltk.FreqDist.plot`, which
         was previously called inside this function. These are:
-            - `'cumulative'`: computes the count cumulatively (in order of descending count)
-            - `'percents'`: shows the y-axis as a percent of all tokens instead of integer count
-            - `'show'`: whether to call show() the matplotlib.pyplot.Figure instance
+        - `'cumulative'`: computes the count cumulatively (in order of descending count)
+        - `'percents'`: shows the y-axis as a percent of all tokens instead of integer count
+        - `'show'`: whether to call show() the matplotlib.pyplot.Figure instance
     ax : matplotlib.Axes
         Optional, axis to plot on. Otherwise creates a new instance.
 
@@ -516,7 +516,7 @@ def visualize_classification_confusion_matrix(om_df, col_dict, title='', ax=None
     caption_txt = f'NOTE: Predicted values\n{no_real_values}\nhad no actual values in the dataset.'
 
     if ax is None:
-        fig, ax = plt.subplots(figsize=(12,6))
+        fig, ax = plt.subplots(figsize=(12, 6))
     else:
         fig = ax.get_figure()
 

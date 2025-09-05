@@ -50,7 +50,7 @@ class Doc2VecModel(BaseEstimator):
     def fit(self, raw_documents, y=None):
         """
         Fits the Doc2Vec model.
-        
+
         Parameters
         ----------
         raw_documents : list
@@ -212,7 +212,7 @@ def create_stopwords(lst_add_words=[], lst_keep_words=[]):
     """
     lst_stopwords = set()
 
-    with resources.open_text('pvops.text', 'stopwords.txt') as file:
+    with resources.files('pvops.text').joinpath('stopwords.txt').open('r') as file:
         default_stopwords = file.read().split()
 
     lst_stopwords = lst_stopwords.union(default_stopwords)

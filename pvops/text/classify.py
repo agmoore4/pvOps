@@ -213,12 +213,11 @@ def get_attributes_from_keywords(om_df, col_dict, reference_df, reference_col_di
         A dictionary that contains the column names that describes how
         referencing is going to be done
         - reference_col_from : string, should be assigned to
-          associated column name in reference_df that are possible input reference values
-          Example: pd.Series(['inverter', 'invert', 'inv'])
+        associated column name in reference_df that are possible input reference values.
+        Example: pd.Series(['inverter', 'invert', 'inv'])
         - reference_col_to : string, should be assigned to
-          associated column name in reference_df that are the output reference values
-          of interest
-          Example: pd.Series(['inverter', 'inverter', 'inverter'])
+        associated column name in reference_df that are the output reference values of interest.
+        Example: pd.Series(['inverter', 'inverter', 'inverter'])
 
     Returns
     -------
